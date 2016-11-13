@@ -1,0 +1,26 @@
+{
+  "name": "beat-bot",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "scripts": {
+    "start": "node app.js",
+    "test": "mocha --reporter spec --timeout 5000"
+  },
+  "dependencies": {
+    "async": "^2.0.1",
+    "facebook-chat-api": "^1.2.0",
+    "fluent-ffmpeg": "^2.1.0",
+    "get-youtube-id": "^1.0.0",
+    "lame": "^1.2.4",
+    "speaker": "^0.3.0",
+    "ytdl-core": "^0.7.19"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": "6.6.0"
+  },
+  "license": "MIT"
+}
