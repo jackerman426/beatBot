@@ -1,17 +1,14 @@
-/////////////////////////////////////////////////////////////////
-//Created:  15/11/16 - mariostzakris
-//Filename: facebook.js
-/////////////////////////////////////////////////////////////////
-
 var environment = process.env.NODE_ENV || "local";
+
 switch (environment) {
     case 'local':
     case 'development':
     case 'staging':
     case 'live':
         threadId = process.env.THREAD_ID;
-        username = process.env.USERNAME;
-        password = process.env.PASSWORD;
+        username = process.env.USERNAME || 'giannismht@hotmail.com';
+        password = process.env.PASSWORD || 'DE6z#FxVCvLonMk';
+        nickname = process.env.NICKNAME || 'Butler';
         break;
     default:
         throw new Error("Unhandled environment!");
@@ -20,5 +17,6 @@ switch (environment) {
 module.exports = {
     threadId: threadId,
     username: username,
-    password: password
+    password: password,
+    nickname: nickname
 };

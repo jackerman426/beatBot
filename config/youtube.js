@@ -1,9 +1,5 @@
-/////////////////////////////////////////////////////////////////
-//Created:  15/11/16 - mariostzakris
-//Filename: youtube.js
-/////////////////////////////////////////////////////////////////
-
 var environment = process.env.NODE_ENV || "local";
+
 switch (environment) {
     case 'local':
     case 'development':
