@@ -6,9 +6,9 @@ switch (environment) {
     case 'staging':
     case 'live':
         threadId = process.env.THREAD_ID;
-        username = process.env.USERNAME;
-        password = process.env.PASSWORD;
-        nickname = process.env.NICKNAME || 'Butler';
+        username = process.env.FB_USERNAME;
+        password = process.env.FB_PASSWORD;
+        nickname = process.env.BOT_NICKNAME || 'Bot';
         break;
     default:
         throw new Error("Unhandled environment!");
