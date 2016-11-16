@@ -6,8 +6,8 @@ switch (environment) {
     case 'staging':
     case 'live':
         threadId = process.env.THREAD_ID;
-        username = process.env.USERNAME || 'giannismht@hotmail.com';
-        password = process.env.PASSWORD || 'DE6z#FxVCvLonMk';
+        username = process.env.USERNAME;
+        password = process.env.PASSWORD;
         nickname = process.env.NICKNAME || 'Butler';
         break;
     default:
