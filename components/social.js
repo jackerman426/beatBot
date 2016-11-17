@@ -1,6 +1,11 @@
 /**
 *  @fileoverview Social API. Get suggestions and reminders to share things on
 * your personal wall or your company's page.
+*                How it should work
+*                ------------------
+*                Bot tell me what to post
+*                Bot what should i share?
+*                Bot I want to share something, give me suggestions
 *
 *  @author       Stathis Charitos
 *

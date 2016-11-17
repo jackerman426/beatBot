@@ -1,5 +1,9 @@
 /**
 *  @fileoverview Jukebox API. Plays youtube links on pc speaker.
+*                General Usage
+*                -------------
+*                Bot stop
+*                Bot play <youtubeurl>
 *
 *  @author       Marios Tzakris
 *

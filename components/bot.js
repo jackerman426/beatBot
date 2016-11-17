@@ -7,6 +7,8 @@
 *  @requires     ../config/facebook
 *  @requires     ./chat
 *  @requires     ./jukebox
+*  @requires     ./printer
+*  @requires     ./social
 */
 var facebookConfig = require('../config/facebook');
 var login = require('facebook-chat-api');

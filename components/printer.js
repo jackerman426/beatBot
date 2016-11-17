@@ -1,5 +1,12 @@
 /**
 *  @fileoverview Printer API. Send files to print them on local printer.
+*                How it should work
+*                ------------------
+*                Bot print <filelink>
+*                Bot can you print this for me? <filelink>
+*                <filelink> Bot can you print this for me?
+*                Bot can you print this for me? | <attachement>
+*                <attachement> | Bot can you print this for me?
 *
 *  @author       Stathis Charitos
 *
