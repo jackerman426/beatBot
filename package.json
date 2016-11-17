@@ -7,7 +7,9 @@
   },
   "scripts": {
     "start": "node app.js",
-    "test": "mocha --reporter spec --timeout 5000"
+    "postinstall": "./node_modules/grunt-cli/bin/grunt jsdoc",
+    "test": "npm run test-unit",
+    "test-unit": "NODE_ENV=test mocha --timeout 15000 './tests/*.spec.js'"
   },
   "dependencies": {
     "async": "^2.0.1",

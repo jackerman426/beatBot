@@ -12,3 +12,12 @@ beatBot is built for [node.js](http://nodejs.org)
 ## Run
 
         $ node app.js
+
+
+api
+----
+
+  NICKNAME ACTION ARGUMENT
+
+  ex. Butler say hi
+      Butler play https://www.youtube.com/watch?v=51_dXlOUqDQ
