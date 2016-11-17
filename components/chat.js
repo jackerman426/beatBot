@@ -21,18 +21,14 @@ function init (fbAPI) {
   api = fbAPI;
 }
 // -----------------------------------------------------------------------------
-/** Choose what action to perform.
+/** Choose what action to perform. We only have one chat action so just call it
 * @method resolve
 * @param {Object} message - fb event object.
 * @param {Object} parts - Remaining action parts.
 */
 // -----------------------------------------------------------------------------
 function resolve (message, parts) {
-  var key = parts[1];
-  var action = actions[key];
-  if (action) {
-    action(message, parts.slice(1, -1));
-  }
+  actions.echo(message);
 }
 // -----------------------------------------------------------------------------
 /** Echo message.

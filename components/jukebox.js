@@ -1,7 +1,7 @@
 /**
 *  @fileoverview Jukebox API. Plays youtube links on pc speaker.
 *
-*  @author       Stathis Charitos
+*  @author       Marios Tzakris
 *
 *  @requires     NPM:get-youtube-id
 *  @requires     NPM:youtube-node

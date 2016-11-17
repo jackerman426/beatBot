@@ -12,10 +12,14 @@ var facebookConfig = require('../config/facebook');
 var login = require('facebook-chat-api');
 var chat = require('./chat');
 var jukebox = require('./jukebox');
+var printer = require('./printer');
+var social = require('./social');
 // Module Nested Actions
 var actions = {
   jukebox: jukebox.resolve,
-  say: chat.resolve
+  say: chat.resolve,
+  print: printer.resolve,
+  social: social.resolve
 };
 // -----------------------------------------------------------------------------
 /** Initialize FB event listener.
@@ -64,14 +68,22 @@ function resolveMessage (message) {
   resolveAction(message, parts);
 }
 // -----------------------------------------------------------------------------
-/** Read message and resolve to particular action based on key words.
+/** Read message and resolve to particular action based on key words. This needs
+* to become smarter as a function and not rely only on key words and nested key
+* word matching, it should handle phrases and conversation context (hard)
 * @method resolveAction
 * @param {Object} message - fb event object.
 */
 // -----------------------------------------------------------------------------
 function resolveAction (message, parts) {
-  var key = parts[1];
-  var action = actions[key];
+  // Check if user is asking for a suggestion. This is different from key word
+  // matching since it is a phrase.
+  if (parts.join('_').toLower() === 'i_want_to_share') {
+    action = actions.social;
+  } else {
+    var key = parts[1];
+    var action = actions[key];
+  }
   if (action) {
     action(message, parts.slice(1, -1));
   }
