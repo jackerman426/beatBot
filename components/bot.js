@@ -80,14 +80,14 @@ function resolveMessage (message) {
 function resolveAction (message, parts) {
   // Check if user is asking for a suggestion. This is different from key word
   // matching since it is a phrase.
-  if (parts.join('_').toLower() === 'i_want_to_share') {
+  if (parts.join('_').toLowerCase() === 'i_want_to_share') {
     action = actions.social;
   } else {
-    var key = parts[1];
+    var key = parts[0];
     var action = actions[key];
   }
   if (action) {
-    action(message, parts.slice(1, -1));
+    action(message, parts);
   }
 }
 /**

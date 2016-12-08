@@ -91,6 +91,7 @@ function playSong (youtubeId) {
   var dl = ytdl(buildYoutubeUrl(youtubeId), {
     filter: function (format) { return format.container === 'mp4'; }
   });
+  console.log('playing song - ' + youtubeId)
   // Format and pipe to speakers.
   ffmpeg(dl)
     .format('mp3')
