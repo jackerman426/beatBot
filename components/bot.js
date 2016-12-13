@@ -18,8 +18,10 @@ var printer = require('./printer');
 var social = require('./social');
 // Module Nested Actions
 var actions = {
-  jukebox: jukebox.resolve,
+  play: jukebox.resolve,
+  stop: jukebox.resolve,
   say: chat.resolve,
+  echo: chat.resolve,
   print: printer.resolve,
   social: social.resolve
 };
@@ -61,33 +63,38 @@ function processEvent (error, message) {
 // -----------------------------------------------------------------------------
 function resolveMessage (message) {
   // Detect if someone is talking to you.
-  var areYouTalkingToMe = message.body.startsWith(facebookConfig.nickname);
+  // var areYouTalkingToMe = message.body.startsWith(facebookConfig.nickname);
   // If its not about you stay out.
-  if (!areYouTalkingToMe) return 0;
+  // if (!areYouTalkingToMe) return 0;
   // Otherwise locate action
   // If it is something like this. BeatBot play <url>
-  var parts = message.body.split(' ').slice(1, -1);
-  resolveAction(message, parts);
+  var action = message.body.substr(0, message.body.indexOf(" ")) || message.body;
+  var info = message.body.substr(message.body.indexOf(" ") + 1);
+  var threadId = _.get(message, 'threadID');
+  resolveAction(action, info, threadId);
 }
 // -----------------------------------------------------------------------------
 /** Read message and resolve to particular action based on key words. This needs
 * to become smarter as a function and not rely only on key words and nested key
 * word matching, it should handle phrases and conversation context (hard)
 * @method resolveAction
-* @param {Object} message - fb event object.
+ * @param {Object} inputAction - action.
+* @param {Object} info - fb event object.
+ * @param {Object} threadId - threadId.
 */
 // -----------------------------------------------------------------------------
-function resolveAction (message, parts) {
+function resolveAction (inputAction, info, threadId) {
   // Check if user is asking for a suggestion. This is different from key word
   // matching since it is a phrase.
-  if (parts.join('_').toLowerCase() === 'i_want_to_share') {
-    action = actions.social;
-  } else {
-    var key = parts[0];
-    var action = actions[key];
-  }
+  // if (parts.join('_').toLowerCase() === 'i_want_to_share') {
+  //   action = actions.social;
+  // } else {
+  //   var key = parts[0];
+  //   var action = actions[key];
+  // }
+  var action = actions[inputAction];
   if (action) {
-    action(message, parts);
+    action(inputAction, info, threadId);
   }
 }
 /**

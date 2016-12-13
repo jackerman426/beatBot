@@ -9,7 +9,8 @@
 var api = null;
 // Module Nested Actions
 var actions = {
-  echo: echo
+  echo: echo,
+  say: echo
 };
 // -----------------------------------------------------------------------------
 /** Initialize API.
@@ -27,20 +28,22 @@ function init (fbAPI) {
 * @param {Object} parts - Remaining action parts.
 */
 // -----------------------------------------------------------------------------
-function resolve (message, parts) {
-  actions.echo(message);
+function resolve (action, info, threadId) {
+  if(actions[action])
+    actions[action](info, threadId);
 }
 // -----------------------------------------------------------------------------
 /** Echo message.
 * @method get
-* @param {Object} message - fb event object.
+* @param {Object} info.
+ * @param {Object} threadId
 */
 // -----------------------------------------------------------------------------
-function echo (message) {
-  api.markAsRead(message.threadID, function (err) {
+function echo (message, threadId) {
+  api.markAsRead(threadId, function (err) {
     if (err) console.log(err);
   });
-  api.sendMessage(message.body.split(' ')[2], message.threadID);
+  api.sendMessage(message, threadId);
 }
 /**
 * Chat API.

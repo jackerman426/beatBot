@@ -31,6 +31,10 @@ var ytBaseUrl = 'https://www.youtube.com/watch?v=';
 var youTube = new YouTube();
 youTube.setKey(youtubeConfig.apiKey);
 var speaker = null;
+
+//flag that helps us define where the input comes from
+var userInputFlag = false;
+
 // Module Nested Actions
 var actions = {
   play: play,
@@ -48,34 +52,35 @@ function init (fbAPI) {
 // -----------------------------------------------------------------------------
 /** Choose what action to perform.
 * @method resolve
-* @param {Object} message - fb event object.
-* @param {Object} parts - Remaining action parts.
+* @param {String} action - fb event object.
+* @param {String} info
+ * @param {String} threadId
 */
 // -----------------------------------------------------------------------------
-function resolve (message, parts) {
-  var key = parts[1];
-  var action = actions[key];
-  if (action) {
-    action(message, parts.slice(1, -1));
-  }
+function resolve (action, info, threadId) {
+  if(actions[action])
+    userInputFlag = true;
+    actions[action](info, threadId);
 }
 // -----------------------------------------------------------------------------
 /** Play youtube link.
 * @method play
-* @param {Object} message - fb event object.
+* @param {Object} url - url of youtube.
 */
 // -----------------------------------------------------------------------------
-function play (message) {
-  var id = getYouTubeID(message.body);
-  if (id) playSong(id);
+function play (url) {
+  var id = getYouTubeID(url);
+  if (id) {
+    stop();
+    playSong(id);
+  }
 }
 // -----------------------------------------------------------------------------
 /** Stop playing.
 * @method stop
-* @param {Object} message - fb event object.
 */
 // -----------------------------------------------------------------------------
-function stop (message) {
+function stop () {
   if (speaker) {
     speaker.end();
   }
@@ -91,17 +96,28 @@ function playSong (youtubeId) {
   var dl = ytdl(buildYoutubeUrl(youtubeId), {
     filter: function (format) { return format.container === 'mp4'; }
   });
-  console.log('playing song - ' + youtubeId)
+  console.log('playing song - ' + youtubeId);
   // Format and pipe to speakers.
   ffmpeg(dl)
     .format('mp3')
     .pipe(new lame.Decoder())
     .on('format', function (format) {
-      if (speaker) speaker.end();
+      // if (speaker) speaker.end();
       speaker = new Speaker(format);
       this.pipe(speaker);
+      userInputFlag = false;
+
+      speaker.on('close', function () {
+        if(!userInputFlag){
+          getRelatedYoutubeId(youtubeId, function(error, relatedYtId){
+            playSong(relatedYtId)
+          })
+        }
+      })
     });
 }
+
+
 // -----------------------------------------------------------------------------
 /** Get a youtube video's related items.
 * @method getRelatedYoutubeId
