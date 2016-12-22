@@ -20,6 +20,7 @@ var social = require('./social');
 var actions = {
   play: jukebox.resolve,
   stop: jukebox.resolve,
+  next: jukebox.resolve,
   say: chat.resolve,
   echo: chat.resolve,
   print: printer.resolve,

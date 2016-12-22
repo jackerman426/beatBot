@@ -32,13 +32,16 @@ var youTube = new YouTube();
 youTube.setKey(youtubeConfig.apiKey);
 var speaker = null;
 
+var ytId = null;
+
 //flag that helps us define where the input comes from
 var userInputFlag = false;
 
 // Module Nested Actions
 var actions = {
   play: play,
-  stop: stop
+  stop: stop,
+  next: next
 };
 // -----------------------------------------------------------------------------
 /** Initialize API.
@@ -69,10 +72,10 @@ function resolve (action, info, threadId) {
 */
 // -----------------------------------------------------------------------------
 function play (url) {
-  var id = getYouTubeID(url);
-  if (id) {
+  ytId = getYouTubeID(url);
+  if (ytId) {
     stop();
-    playSong(id);
+    playSong(ytId);
   }
 }
 // -----------------------------------------------------------------------------
@@ -110,11 +113,28 @@ function playSong (youtubeId) {
       speaker.on('close', function () {
         if(!userInputFlag){
           getRelatedYoutubeId(youtubeId, function(error, relatedYtId){
-            playSong(relatedYtId)
+            if(relatedYtId){
+              ytId = relatedYtId
+              playSong(ytId)
+            }
+
           })
         }
       })
     });
+}
+
+
+function next () {
+  getRelatedYoutubeId(ytId, function(error, relatedYtId){
+    if(relatedYtId){
+      if (speaker) {
+        speaker.end();
+      }
+      ytId = relatedYtId;
+      playSong(ytId)
+    }
+  })
 }
 
 
