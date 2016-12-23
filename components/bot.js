@@ -69,10 +69,13 @@ function resolveMessage (message) {
   // if (!areYouTalkingToMe) return 0;
   // Otherwise locate action
   // If it is something like this. BeatBot play <url>
-  var action = message.body.substr(0, message.body.indexOf(" ")) || message.body;
-  var info = message.body.substr(message.body.indexOf(" ") + 1);
-  var threadId = _.get(message, 'threadID');
-  resolveAction(action, info, threadId);
+  if(_.get(message, 'body')){
+    var action = message.body.substr(0, message.body.indexOf(" ")) || message.body;
+    var info = message.body.substr(message.body.indexOf(" ") + 1);
+    var threadId = _.get(message, 'threadID');
+    resolveAction(action, info, threadId);
+  }
+
 }
 // -----------------------------------------------------------------------------
 /** Read message and resolve to particular action based on key words. This needs
