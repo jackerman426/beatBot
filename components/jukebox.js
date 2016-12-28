@@ -77,12 +77,11 @@ function play (query) {
     stop();
     playSong(ytId);
   } else {
-    searchSong(query, function(error, songId){
+      searchSong(query, function(error, songId){
         if(songId){
-
+          stop();
           ytId = songId;
-        stop();
-        playSong(songId);
+          playSong(songId);
       }
     })
 
@@ -135,16 +134,16 @@ function playSong (youtubeId) {
 }
 
 function searchSong (query, next) {
+  delete youTube['params']['relatedToVideoId']
   youTube.search(query, 10, function(error, results) {
     if (error) {
       console.log(error);
-    }
-    else {
+    } else {
       var songObject = _.find(results['items'], function(result){
          return _.get(result, 'id.kind') === "youtube#video"
       });
-      var songId = _.get(songObject, 'id.videoId')
-      return next(null, songId);
+      var id = _.get(songObject, 'id.videoId')
+      return next(null, id);
     }
   });
 }
