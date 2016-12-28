@@ -71,11 +71,21 @@ function resolve (action, info, threadId) {
 * @param {Object} url - url of youtube.
 */
 // -----------------------------------------------------------------------------
-function play (url) {
-  ytId = getYouTubeID(url);
+function play (query) {
+  ytId = getYouTubeID(query);
   if (ytId) {
     stop();
     playSong(ytId);
+  } else {
+    searchSong(query, function(error, songId){
+        if(songId){
+
+          ytId = songId;
+        stop();
+        playSong(songId);
+      }
+    })
+
   }
 }
 // -----------------------------------------------------------------------------
@@ -122,6 +132,21 @@ function playSong (youtubeId) {
         }
       })
     });
+}
+
+function searchSong (query, next) {
+  youTube.search(query, 10, function(error, results) {
+    if (error) {
+      console.log(error);
+    }
+    else {
+      var songObject = _.find(results['items'], function(result){
+         return _.get(result, 'id.kind') === "youtube#video"
+      });
+      var songId = _.get(songObject, 'id.videoId')
+      return next(null, songId);
+    }
+  });
 }
 
 
