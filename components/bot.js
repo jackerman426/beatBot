@@ -9,11 +9,13 @@
 *  @requires     ./jukebox
 *  @requires     ./printer
 *  @requires     ./social
+*  @requires     ./vol
 */
 var facebookConfig = require('../config/facebook');
 var login = require('facebook-chat-api');
 var chat = require('./chat');
 var jukebox = require('./jukebox');
+var vol = require('./vol');
 var printer = require('./printer');
 var social = require('./social');
 // Module Nested Actions
@@ -24,7 +26,8 @@ var actions = {
   say: chat.resolve,
   echo: chat.resolve,
   print: printer.resolve,
-  social: social.resolve
+  social: social.resolve,
+  vol:vol.resolve
 };
 // -----------------------------------------------------------------------------
 /** Initialize FB event listener.
@@ -41,6 +44,7 @@ function start (callback) {
     // Inject api to nested modules
     chat.init(api);
     jukebox.init(api);
+    vol.init(api)
     console.log('Listening...');
     api.listen(processEvent);
   });
