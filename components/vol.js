@@ -9,9 +9,7 @@ var api = null;
 var current_volume = null;
 // Module Nested Actions
 var actions = {
-  vol: vol,
-  Vol: vol,
-  VOL: vol
+  vol: vol
 };
 // -----------------------------------------------------------------------------
 /** Initialize API.
@@ -59,9 +57,9 @@ function vol (message, threadId) {
   if(message == "help")
     api.sendMessage("Type \"vol +\" & \"vol -\" to change the volume.", threadId);
   if(message == "+")
-    run_cmd( "ls", ["-l"], function(text) { console.log (text) });
+    run_cmd( "amixer cset numid=3", ["100%"], function(text) { console.log (text) });
   if(message == "-")
-    run_cmd( "ls", ["-l"], function(text) { console.log (text) });
+    run_cmd( "amixer cset numid=3", ["90%"], function(text) { console.log (text) });
 }
 /**
 * Chat API.
