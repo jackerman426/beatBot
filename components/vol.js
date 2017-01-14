@@ -19,6 +19,7 @@ var actions = {
 // -----------------------------------------------------------------------------
 function init (fbAPI) {
   api = fbAPI;
+  current_volume = get_current_volume()
 }
 // -----------------------------------------------------------------------------
 /** Choose what action to perform. We only have one chat action so just call it
@@ -42,6 +43,10 @@ function run_cmd(cmd, callBack) {
     child.stdout.on('end', function() { callBack (resp) });
 } // ()
 
+function get_current_volume() {
+  var value;
+  run_cmd( "amixer cget numid=1", function(text) { console.log (text) });
+}
 
 // -----------------------------------------------------------------------------
 /** Echo message.
@@ -57,9 +62,9 @@ function vol (message, threadId) {
   if(message == "help")
     api.sendMessage("Type \"vol +\" & \"vol -\" to change the volume.", threadId);
   if(message == "+")
-    run_cmd( "amixer cset numid=1 -- 90%", function(text) { console.log (text) });
-  if(message == "-")
     run_cmd( "amixer cset numid=1 -- 100%", function(text) { console.log (text) });
+  if(message == "-")
+    run_cmd( "amixer cset numid=1 -- 90%", function(text) { console.log (text) });
 }
 /**
 * Chat API.
