@@ -52,7 +52,7 @@ function get_current_volume() {
     if(text.match(numberPattern)){
       value = text.match(numberPattern)
       max_volume = value[2]
-      min_volume = max(-400, value[3])
+      min_volume = Math.max(-400, value[3])
       current_volume = value[5]
       step = (max_volume - min_volume) / 5
     }
@@ -76,10 +76,10 @@ function vol (message, threadId) {
   if(message == "help")
     api.sendMessage("Type \"vol +\" & \"vol -\" to change the volume.", threadId);
   if(message == "+")
-    current_volume = min(max_volume, current_volume + step)
+    current_volume = Math.min(max_volume, current_volume + step)
     run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) { console.log (text) });
   if(message == "-")
-    current_volume = max(min_volume, current_volume - step)
+    current_volume = Math.max(min_volume, current_volume - step)
     run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) { console.log (text) });
 }
 /**
