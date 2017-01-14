@@ -33,9 +33,9 @@ function resolve (action, info, threadId) {
     actions[action](info, threadId);
 }
 
-function run_cmd(cmd, args, callBack ) {
-    var spawn = require('child_process').spawn;
-    var child = spawn(cmd, args);
+function run_cmd(cmd, callBack) {
+    var exec = require('child_process').exec;
+    var child = exec(cmd);
     var resp = "";
 
     child.stdout.on('data', function (buffer) { resp += buffer.toString() });
@@ -57,9 +57,9 @@ function vol (message, threadId) {
   if(message == "help")
     api.sendMessage("Type \"vol +\" & \"vol -\" to change the volume.", threadId);
   if(message == "+")
-    run_cmd( "amixer cset numid=1", ["-- 100%"], function(text) { console.log (text) });
+    run_cmd( "amixer cset numid=1 -- 90%", function(text) { console.log (text) });
   if(message == "-")
-    run_cmd( "amixer cset numid=1", ["-- 90%"], function(text) { console.log (text) });
+    run_cmd( "amixer cset numid=1 -- 100%", function(text) { console.log (text) });
 }
 /**
 * Chat API.
