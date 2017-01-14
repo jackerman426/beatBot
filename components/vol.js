@@ -55,7 +55,11 @@ function get_current_volume() {
       max_volume = value[2]
       min_volume = Math.max(-400, value[3])
       current_volume = value[5]
+      console.log(min_volume)
+      console.log(max_volume)
+      console.log(current_volume)
       step = (max_volume - min_volume) / 5
+      console.log(step)
     }
   });
 
