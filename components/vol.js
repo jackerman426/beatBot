@@ -46,9 +46,10 @@ function run_cmd(cmd, callBack) {
 } // ()
 
 function get_current_volume() {
-  var value;
+  var value = null;
   var numberPattern = /-*\d+/g;
   run_cmd( "amixer cget numid=1", function(text) { value = text });
+  console.log(value)
   if(value.match(numberPattern)){
     value = console.log(value.match(numberPattern))
     max_volume = value[2]
