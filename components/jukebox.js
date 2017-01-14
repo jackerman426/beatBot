@@ -39,9 +39,10 @@ var userInputFlag = false;
 
 // Module Nested Actions
 var actions = {
-  play: play,
-  stop: stop,
-  next: next
+  play: play, //plays a song
+  stop: stop, //stops player
+  next: next, //plays the next song
+  info: info // displays info of the song playing right now
 };
 // -----------------------------------------------------------------------------
 /** Initialize API.
@@ -94,6 +95,7 @@ function play (query) {
 // -----------------------------------------------------------------------------
 function stop () {
   if (speaker) {
+    ytId = null;
     speaker.end();
   }
 }
@@ -159,6 +161,31 @@ function next () {
       playSong(ytId)
     }
   })
+}
+
+/** Displays info of the song playing
+ * @method info
+ */
+// -----------------------------------------------------------------------------
+function info (query, threadId) {
+  youTube.getById(ytId, function(error, result) {
+    if (error) {
+      console.log(error);
+    }
+    else {
+      var songDescription = _.get(result, "items[0].snippet.description");
+      if(songDescription) {
+          api.sendMessage(songDescription, threadId);
+      } else {
+        api.sendMessage('Nothing to say atm fuck off!', threadId);
+      }
+      api.markAsRead(threadId, function (err) {
+        if (err) console.log(err);
+      });
+
+
+    }
+  });
 }
 
 
