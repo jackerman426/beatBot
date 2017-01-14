@@ -53,13 +53,13 @@ function run_cmd(cmd, args, callBack ) {
 function vol (message, threadId) {
 
   if(message == "vol")
-    api.sendMessage("That's right! I can now change the volume of this fucking thing, please type \"vol help\" for right usage.", threadId);
+    api.sendMessage("That's right! I can now change the volume of this fucking thing, type \"vol help\" for right usage.", threadId);
   if(message == "help")
     api.sendMessage("Type \"vol +\" & \"vol -\" to change the volume.", threadId);
   if(message == "+")
-    run_cmd( "amixer cset numid=3", ["100%"], function(text) { console.log (text) });
+    run_cmd( "amixer cset numid=1", ["-- 100%"], function(text) { console.log (text) });
   if(message == "-")
-    run_cmd( "amixer cset numid=3", ["90%"], function(text) { console.log (text) });
+    run_cmd( "amixer cset numid=1", ["-- 90%"], function(text) { console.log (text) });
 }
 /**
 * Chat API.
