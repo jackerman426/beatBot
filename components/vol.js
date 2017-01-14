@@ -50,7 +50,7 @@ function get_current_volume() {
   var numberPattern = /-*\d+/g;
   run_cmd( "amixer cget numid=1", function(text) {
     if(text.match(numberPattern)){
-      value = console.log(text.match(numberPattern))
+      value = text.match(numberPattern)
       max_volume = value[2]
       min_volume = max(-400, value[3])
       current_volume = value[5]
