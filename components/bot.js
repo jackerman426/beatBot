@@ -2,6 +2,7 @@
 *  @fileoverview Bot API. General bot initialisation and actions.
 *
 *  @author       Marios Tzakris
+*  @author       Stathis Charitos
 *
 *  @requires     NPM:facebook-chat-api
 *  @requires     ../config/facebook
@@ -23,6 +24,7 @@ var actions = {
   play: jukebox.resolve,
   stop: jukebox.resolve,
   next: jukebox.resolve,
+  info: jukebox.resolve,
   say: chat.resolve,
   echo: chat.resolve,
   print: printer.resolve,
@@ -75,9 +77,12 @@ function resolveMessage (message) {
   // If it is something like this. BeatBot play <url>
   if(_.get(message, 'body')){
     var action = message.body.substr(0, message.body.indexOf(" ")) || message.body;
+    if(action)
+      action.toLowerCase();
     var info = message.body.substr(message.body.indexOf(" ") + 1);
     var threadId = _.get(message, 'threadID');
-    resolveAction(action, info, threadId);
+    if(threadId == process.env.THREAD_ID)
+      resolveAction(action, info, threadId);
   }
 
 }
