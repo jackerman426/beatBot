@@ -48,15 +48,16 @@ function run_cmd(cmd, callBack) {
 function get_current_volume() {
   var value = null;
   var numberPattern = /-*\d+/g;
-  run_cmd( "amixer cget numid=1", function(text) { value = text });
-  console.log(value)
-  if(value.match(numberPattern)){
-    value = console.log(value.match(numberPattern))
-    max_volume = value[2]
-    min_volume = max(-400, value[3])
-    current_volume = value[5]
-    step = (max_volume - min_volume) / 5
-  }
+  run_cmd( "amixer cget numid=1", function(text) {
+    if(text.match(numberPattern)){
+      value = console.log(text.match(numberPattern))
+      max_volume = value[2]
+      min_volume = max(-400, value[3])
+      current_volume = value[5]
+      step = (max_volume - min_volume) / 5
+    }
+  });
+
 }
 
 // -----------------------------------------------------------------------------
