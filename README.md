@@ -1,5 +1,5 @@
 # beatBot
-Facebook chat bot that plays youtube video to pc (raspberry pie etc). Send your youtube link to the chat and listen.
+Facebook chat bot that plays youtube video to pc (raspberry pie etc). Send your song or artist or whatever to the chat and listen.
 
 
 beatBot is built for [node.js](http://nodejs.org)
@@ -17,7 +17,4 @@ beatBot is built for [node.js](http://nodejs.org)
 api
 ----
 
-  NICKNAME ACTION ARGUMENT
-
-  ex. Butler say hi
-      Butler play https://www.youtube.com/watch?v=51_dXlOUqDQ
+play nickelback this is how you remind me
