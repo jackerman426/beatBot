@@ -5,7 +5,7 @@ switch (environment) {
     case 'development':
     case 'staging':
     case 'live':
-        threadId = process.env.THREAD_ID;
+        threadId = process.env.FB_THREAD_ID;
         username = process.env.FB_USERNAME;
         password = process.env.FB_PASSWORD;
         nickname = process.env.BOT_NICKNAME || 'Bot';

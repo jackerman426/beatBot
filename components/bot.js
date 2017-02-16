@@ -1,3 +1,4 @@
+'use strict'
 /**
 *  @fileoverview Bot API. General bot initialisation and actions.
 *
@@ -76,12 +77,12 @@ function resolveMessage (message) {
   // Otherwise locate action
   // If it is something like this. BeatBot play <url>
   if(_.get(message, 'body')){
-    var action = message.body.substr(0, message.body.indexOf(" ")) || message.body;
+    let action = message.body.substr(0, message.body.indexOf(" ")) || message.body;
     if(action)
-      action.toLowerCase();
-    var info = message.body.substr(message.body.indexOf(" ") + 1);
-    var threadId = _.get(message, 'threadID');
-    if(threadId == process.env.THREAD_ID)
+      action = action.toLowerCase();
+    const info = message.body.substr(message.body.indexOf(" ") + 1);
+    const threadId = _.get(message, 'threadID');
+    if(threadId == facebookConfig.threadId)
       resolveAction(action, info, threadId);
   }
 
@@ -105,9 +106,11 @@ function resolveAction (inputAction, info, threadId) {
   //   var key = parts[0];
   //   var action = actions[key];
   // }
-  var action = actions[inputAction];
+  let action = actions[inputAction];
   if (action) {
     action(inputAction, info, threadId);
+  } else {
+      console.log('Cant recognise action');
   }
 }
 /**
