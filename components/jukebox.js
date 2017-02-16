@@ -95,7 +95,6 @@ function play (query) {
 // -----------------------------------------------------------------------------
 function stop () {
   if (speaker) {
-    ytId = null;
     speaker.end();
   }
 }
