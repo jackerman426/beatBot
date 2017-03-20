@@ -75,7 +75,7 @@ function vol (message, threadId) {
   if(message == "vol")
     api.sendMessage("That's right! I can now change the volume of this fucking thing, type \"vol help\" for right usage.", threadId);
   if(message == "?")
-    api.sendMessage("Vol: " + String(current_volume) + "/" + String(max_volume), threadId);
+    api.sendMessage("Vol: " + String((current_volume + Math.abs(min_volume)) / (max_volume + Math.abs(min_volume))) + " / 1.0", threadId);
   if(message == "help")
     api.sendMessage("Type \"vol +\" & \"vol -\" to change the volume.", threadId);
   if(message == "+")
