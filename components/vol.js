@@ -75,14 +75,26 @@ function vol (message, threadId) {
   if(message == "vol")
     api.sendMessage("That's right! I can now change the volume of this fucking thing, type \"vol help\" for right usage.", threadId);
   if(message == "?")
-    api.sendMessage(current_volume, threadId);
+    api.sendMessage("Vol: " + String(current_volume) + "/" + String(max_volume), threadId);
   if(message == "help")
     api.sendMessage("Type \"vol +\" & \"vol -\" to change the volume.", threadId);
   if(message == "+")
     current_volume = Math.min(max_volume, current_volume + step)
     run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) {});
+  if(message == "++")
+    current_volume = Math.min(max_volume, current_volume + (2.0 * step))
+    run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) {});
+  if(message == "+++")
+    current_volume = max_volume
+    run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) {});
   if(message == "-")
     current_volume = Math.max(min_volume, current_volume - step)
+    run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) {});
+  if(message == "--")
+    current_volume = Math.max(min_volume, current_volume - (2.0 * step))
+    run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) {});
+  if(message == "---")
+    current_volume = min_volume
     run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) {});
 }
 /**
