@@ -75,9 +75,9 @@ function vol (message, threadId) {
   if(message == "vol")
     api.sendMessage("That's right! I can now change the volume of this fucking thing, type \"vol help\" for right usage.", threadId);
   if(message == "?")
-    api.sendMessage("Vol: " + String((current_volume + Math.abs(min_volume)) / (max_volume + Math.abs(min_volume))) + " / 1.0", threadId);
+    api.sendMessage("Vol: " + String(Math.round(10.0 * ((current_volume - min_volume) / (max_volume - min_volume)))) + " out of 10", threadId);
   if(message == "help")
-    api.sendMessage("Type \"vol +\" & \"vol -\" to change the volume.", threadId);
+    api.sendMessage("Type \"vol +(++)(max)\" & \"vol -(--)(min)\" to change the volume.", threadId);
   if(message == "+")
     current_volume = Math.min(max_volume, current_volume + step)
     run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) {});
