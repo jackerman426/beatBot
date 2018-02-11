@@ -16,10 +16,11 @@
 *  @requires     NPM:lodash
 *  @requires     ../config/youtube
 */
+const async = require('async');
 var getYouTubeID = require('get-youtube-id');
 var YouTube = require('youtube-node');
 var ytdl = require('ytdl-core');
-var ffmpeg = require('fluent-ffmpeg');
+  var ffmpeg = require('fluent-ffmpeg');
 var lame = require('lame');
 var Speaker = require('speaker');
 global['_'] = require('lodash');
@@ -64,7 +65,10 @@ function init (fbAPI) {
 function resolve (action, info, threadId) {
   if(actions[action])
     userInputFlag = true;
-    actions[action](info, threadId);
+    actions[action](info, threadId, function(error){
+      if(error)
+        console.error(error);
+    });
 }
 // -----------------------------------------------------------------------------
 /** Play youtube link.
@@ -72,18 +76,30 @@ function resolve (action, info, threadId) {
 * @param {Object} url - url of youtube.
 */
 // -----------------------------------------------------------------------------
-function play (query) {
+function play (query, threadId, next) {
   ytId = getYouTubeID(query);
   if (ytId) {
-    stop();
-    playSong(ytId);
+    stop(query, threadId, function(error){
+      if(!error){
+          playSong(ytId);
+      } else {
+          next(error);
+      }
+    });
   } else {
       searchSong(query, function(error, songId){
         if(songId){
-          stop();
-          ytId = songId;
-          playSong(songId);
-      }
+          stop(query, threadId, function(error){
+              if(!error){
+                  ytId = songId;
+                  playSong(songId);
+              } else {
+                  next(error);
+              }
+          });
+      } else {
+            next(error);
+        }
     })
 
   }
@@ -93,9 +109,14 @@ function play (query) {
 * @method stop
 */
 // -----------------------------------------------------------------------------
-function stop () {
+function stop (info, threadId, next) {
   if (speaker) {
-    speaker.end();
+    speaker.end(function(error){
+      speaker = null;
+      return next(error);
+    });
+  } else {
+    return next(null);
   }
 }
 // -----------------------------------------------------------------------------
@@ -150,14 +171,29 @@ function searchSong (query, next) {
 }
 
 
-function next () {
+function next (info, threadId, next) {
   getRelatedYoutubeId(ytId, function(error, relatedYtId){
     if(relatedYtId){
-      if (speaker) {
-        speaker.end();
-      }
-      ytId = relatedYtId;
-      playSong(ytId)
+      async.series([
+
+          function(callback){
+              if (speaker) {
+                  speaker.end(function(error){
+                      return callback(error);
+                  });
+              } else {
+                return callback(null);
+              }
+          },
+          function(callback){
+              ytId = relatedYtId;
+              playSong(ytId)
+              callback(null);
+          },
+
+      ], function(error){
+        return next(error);
+      })
     }
   })
 }
@@ -166,10 +202,10 @@ function next () {
  * @method info
  */
 // -----------------------------------------------------------------------------
-function info (query, threadId) {
+function info (query, threadId, next) {
   youTube.getById(ytId, function(error, result) {
     if (error) {
-      console.log(error);
+        next(error);
     }
     else {
       var songDescription = _.get(result, "items[0].snippet.description");
@@ -179,10 +215,8 @@ function info (query, threadId) {
         api.sendMessage('Nothing to say atm fuck off!', threadId);
       }
       api.markAsRead(threadId, function (err) {
-        if (err) console.log(err);
+          next(err)
       });
-
-
     }
   });
 }
