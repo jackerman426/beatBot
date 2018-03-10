@@ -1,8 +1,8 @@
-# beatBot
+# BeatBot
 Facebook chat bot that plays youtube video to pc (raspberry pie etc). Send your song or artist or whatever to the chat and listen.
 
 
-beatBot is built for [node.js](http://nodejs.org)
+BeatBot is built for [node.js](http://nodejs.org)
 
 
 ## Installation

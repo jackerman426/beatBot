@@ -34,8 +34,8 @@ async.waterfall([
     },
     function (callback) {
         require('dotenv').config({path: envFilePathName});
-        // Start Bot
-        require('./components/bot').start();
+        // Start Server
+        require('./components/bot/bot').start();
     }
 
 ], function (error) {

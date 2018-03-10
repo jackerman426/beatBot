@@ -14,5 +14,5 @@ module.exports = {
     VERSION_NUMBER: "0.0.1",
     ENVIRONMENT : environment,
     EMAIL_ADDRESS: ['mtzakris@gmail.com', ''],
-    NAME: 'beatBot'
+    NAME: 'BeatBot'
 };

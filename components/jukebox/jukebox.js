@@ -24,7 +24,7 @@ var ytdl = require('ytdl-core');
 var lame = require('lame');
 var Speaker = require('speaker');
 global['_'] = require('lodash');
-var youtubeConfig = require('../config/youtube');
+var youtubeConfig = require('../../config/youtube');
 var _ = global['_'];
 var api = null;
 // Initialize youtube api.
@@ -62,10 +62,10 @@ function init (fbAPI) {
  * @param {String} threadId
 */
 // -----------------------------------------------------------------------------
-function resolve (action, info, threadId) {
+function resolve (action, info) {
   if(actions[action])
     userInputFlag = true;
-    actions[action](info, threadId, function(error){
+    actions[action](info, function(error){
       if(error)
         console.error(error);
     });
@@ -76,10 +76,10 @@ function resolve (action, info, threadId) {
 * @param {Object} url - url of youtube.
 */
 // -----------------------------------------------------------------------------
-function play (query, threadId, next) {
+function play (query, next) {
   ytId = getYouTubeID(query);
   if (ytId) {
-    stop(query, threadId, function(error){
+    stop(query, function(error){
       if(!error){
           playSong(ytId);
       } else {
@@ -89,7 +89,7 @@ function play (query, threadId, next) {
   } else {
       searchSong(query, function(error, songId){
         if(songId){
-          stop(query, threadId, function(error){
+          stop(query, function(error){
               if(!error){
                   ytId = songId;
                   playSong(songId);
@@ -109,7 +109,7 @@ function play (query, threadId, next) {
 * @method stop
 */
 // -----------------------------------------------------------------------------
-function stop (info, threadId, next) {
+function stop (info, next) {
   if (speaker) {
     speaker.end(function(error){
       speaker = null;
@@ -171,7 +171,7 @@ function searchSong (query, next) {
 }
 
 
-function next (info, threadId, next) {
+function next (info, next) {
   getRelatedYoutubeId(ytId, function(error, relatedYtId){
     if(relatedYtId){
       async.series([
@@ -202,23 +202,23 @@ function next (info, threadId, next) {
  * @method info
  */
 // -----------------------------------------------------------------------------
-function info (query, threadId, next) {
-  youTube.getById(ytId, function(error, result) {
-    if (error) {
-        next(error);
-    }
-    else {
-      var songDescription = _.get(result, "items[0].snippet.description");
-      if(songDescription) {
-          api.sendMessage(songDescription, threadId);
-      } else {
-        api.sendMessage('Nothing to say atm fuck off!', threadId);
-      }
-      api.markAsRead(threadId, function (err) {
-          next(err)
-      });
-    }
-  });
+function info (query, next) {
+  // youTube.getById(ytId, function(error, result) {
+  //   if (error) {
+  //       next(error);
+  //   }
+  //   else {
+  //     var songDescription = _.get(result, "items[0].snippet.description");
+  //     if(songDescription) {
+  //         api.sendMessage(songDescription, threadId);
+  //     } else {
+  //       api.sendMessage('Nothing to say atm fuck off!', threadId);
+  //     }
+  //     api.markAsRead(threadId, function (err) {
+  //         next(err)
+  //     });
+  //   }
+  // });
 }
 
 
