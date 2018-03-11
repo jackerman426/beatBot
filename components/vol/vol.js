@@ -5,7 +5,6 @@
 *
 */
 // Facebook api to be added on init.
-var api = null;
 var current_volume = null;
 var min_volume = null;
 var max_volume = null;
@@ -20,22 +19,23 @@ var actions = {
 * @param {Object} fbAPI - Facebook api instance.
 */
 // -----------------------------------------------------------------------------
-function init (fbAPI) {
-  api = fbAPI;
+function init () {
   run_cmd( "amixer cset numid=1 -- 0", function(text) {});
   get_current_volume()
 }
 // -----------------------------------------------------------------------------
 /** Choose what action to perform. We only have one chat action so just call it
 * @method resolve
-* @param {Object} message - fb event object.
-* @param {Object} parts - Remaining action parts.
+* @param {String} action - action
+* @param {String} info - String.
+* @param {Object} next - return callback function
 */
 // -----------------------------------------------------------------------------
-function resolve (action, info, threadId) {
-  console.log(info)
+function resolve (action, info, next) {
   if(actions[action])
-    actions[action](info, threadId);
+    actions[action](info, function (error, replyText) {
+        return next(error, replyText)
+    });
 }
 
 function run_cmd(cmd, callBack) {
@@ -51,13 +51,11 @@ function get_current_volume() {
   var numberPattern = /-*\d+/g;
   run_cmd( "amixer cget numid=1", function(text) {
     if(text.match(numberPattern)){
-      console.log(text.match(numberPattern))
       value = text.match(numberPattern)
       max_volume = value[3]
       min_volume = Math.max(-800, value[2])
       current_volume = value[5]
       step = (max_volume - min_volume) / 8
-      console.log(step)
     }
   });
 
@@ -66,40 +64,40 @@ function get_current_volume() {
 // -----------------------------------------------------------------------------
 /** Echo message.
 * @method get
-* @param {Object} info.
- * @param {Object} threadId
+* @param {Object} message.
+ * @param {Object} next.
 */
 // -----------------------------------------------------------------------------
-function vol (message, threadId) {
+function vol (message, next) {
 
-  if(message == "vol")
-    api.sendMessage("That's right! I can now change the volume of this fucking thing, type \"vol help\" for right usage.", threadId);
-  if(message == "?")
-    api.sendMessage("Vol: " + String(Math.round(10.0 * ((current_volume - min_volume) / (max_volume - min_volume)))) + " out of 10", threadId);
-  if(message == "help")
-    api.sendMessage("Type \"vol +(++)(max)\" & \"vol -(--)(min)\" to change the volume.", threadId);
-  if(message == "+")
-    current_volume = Math.min(max_volume, current_volume + step)
+  if(message === "vol")
+      return next(null, "That's right! I can now change the volume of this fucking thing, type \"vol help\" for right usage.");
+  if(message === "?")
+      return next(null, "Vol: " + String(Math.round(10.0 * ((current_volume - min_volume) / (max_volume - min_volume)))) + " out of 10");
+  if(message === "help")
+      return next(null, "Type \"vol +(++)(max)\" & \"vol -(--)(min)\" to change the volume.");
+  if(message === "+")
+    current_volume = Math.min(max_volume, current_volume + step);
     run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) {});
-  if(message == "++")
+  if(message === "++")
     current_volume = Math.min(max_volume, current_volume + (2.0 * step))
     run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) {});
-  if(message == "+++")
+  if(message === "+++")
     current_volume = Math.min(max_volume, current_volume + (3.0 * step))
     run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) {});
-  if(message == "max")
+  if(message === "max")
     current_volume = max_volume
     run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) {});
-  if(message == "-")
-    current_volume = Math.max(min_volume, current_volume - step)
+  if(message === "-")
+    current_volume = Math.max(min_volume, current_volume - step);
     run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) {});
-  if(message == "--")
+  if(message === "--")
     current_volume = Math.max(min_volume, current_volume - (2.0 * step))
     run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) {});
-  if(message == "---")
+  if(message === "---")
     current_volume = Math.max(min_volume, current_volume - (3.0 * step))
     run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) {});
-  if(message == "min")
+  if(message === "min")
     current_volume = min_volume
     run_cmd( "amixer cset numid=1 -- " + current_volume, function(text) {});
 }

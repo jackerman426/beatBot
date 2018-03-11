@@ -6,7 +6,6 @@ const env = process.env.NODE_ENV || 'local';
 const envPath = './env/';
 const envFile = env + '.env';
 // Load environment
-
 const envFilePathName = envPath + envFile;
 
 async.waterfall([
@@ -33,9 +32,13 @@ async.waterfall([
         });
     },
     function (callback) {
+
         require('dotenv').config({path: envFilePathName});
+
+        const Bot = require('./components/bot/bot');
+        const bot = new Bot();
         // Start Server
-        require('./components/bot/bot').start();
+        bot.start();
     }
 
 ], function (error) {

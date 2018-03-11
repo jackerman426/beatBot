@@ -12,10 +12,18 @@
 
 const actions = {
     echo: echo, //repeats a phrase
-    say: say, //repeats a phrase
+    say: echo, //repeats a phrase
 };
 
 
+// -----------------------------------------------------------------------------
+/** Initialize API.
+ * @method init
+ */
+// -----------------------------------------------------------------------------
+function init(){
+
+}
 
 // -----------------------------------------------------------------------------
 /** Choose what action to perform.
@@ -47,22 +55,9 @@ function echo (text, next) {
     }
 }
 
-// -----------------------------------------------------------------------------
-/** Say a phrase
- * @method echo
- * @param {Object} next
- * @param {String} text - info
- */
-// -----------------------------------------------------------------------------
-function say (text, next) {
-    if(text){
-        return next(null, text);
-    } else {
-        return next(null, 'What do you want me to say dude?')
-    }
-}
 
 
 module.exports = {
+    init: init,
     resolve: resolve
 };
