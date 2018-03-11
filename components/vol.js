@@ -54,9 +54,9 @@ function get_current_volume() {
       console.log(text.match(numberPattern))
       value = text.match(numberPattern)
       max_volume = value[3]
-      min_volume = Math.max(-800, value[2])
+      min_volume = Math.max(-1000, value[2])
       current_volume = value[5]
-      step = (max_volume - min_volume) / 8
+      step = (max_volume - min_volume) / 10
       console.log(step)
     }
   });
