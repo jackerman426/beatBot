@@ -59,21 +59,21 @@ function init (fbAPI) {
 * @method resolve
 * @param {String} action - fb event object.
 * @param {String} info
- * @param {String} threadId
+ * @param {Object} next
 */
 // -----------------------------------------------------------------------------
-function resolve (action, info) {
+function resolve (action, info, next) {
   if(actions[action])
     userInputFlag = true;
-    actions[action](info, function(error){
-      if(error)
-        console.error(error);
+    actions[action](info, function(error, replyText){
+      return next(error, replyText)
     });
 }
 // -----------------------------------------------------------------------------
 /** Play youtube link.
 * @method play
-* @param {Object} url - url of youtube.
+* @param {String} query - query of youtube.
+* @param {Object} next
 */
 // -----------------------------------------------------------------------------
 function play (query, next) {
@@ -82,6 +82,7 @@ function play (query, next) {
     stop(query, function(error){
       if(!error){
           playSong(ytId);
+          return next(null, '-Enjoy-')
       } else {
           next(error);
       }
@@ -93,15 +94,15 @@ function play (query, next) {
               if(!error){
                   ytId = songId;
                   playSong(songId);
+                  return next(null, '-Enjoy-')
               } else {
                   next(error);
               }
           });
       } else {
-            next(error);
+            next(error, 'Cannot find song. Please try a new query!');
         }
     })
-
   }
 }
 // -----------------------------------------------------------------------------
@@ -113,10 +114,10 @@ function stop (info, next) {
   if (speaker) {
     speaker.end(function(error){
       speaker = null;
-      return next(error);
+      return next(error, 'Ok Boss!');
     });
   } else {
-    return next(null);
+    return next(null, 'Ok Boss!');
   }
 }
 // -----------------------------------------------------------------------------
@@ -192,7 +193,7 @@ function next (info, next) {
           },
 
       ], function(error){
-        return next(error);
+        return next(error, '-Enjoy-');
       })
     }
   })
@@ -203,22 +204,19 @@ function next (info, next) {
  */
 // -----------------------------------------------------------------------------
 function info (query, next) {
-  // youTube.getById(ytId, function(error, result) {
-  //   if (error) {
-  //       next(error);
-  //   }
-  //   else {
-  //     var songDescription = _.get(result, "items[0].snippet.description");
-  //     if(songDescription) {
-  //         api.sendMessage(songDescription, threadId);
-  //     } else {
-  //       api.sendMessage('Nothing to say atm fuck off!', threadId);
-  //     }
-  //     api.markAsRead(threadId, function (err) {
-  //         next(err)
-  //     });
-  //   }
-  // });
+  youTube.getById(ytId, function(error, result) {
+    if (error) {
+        next(error);
+    }
+    else {
+      const songDescription = _.get(result, "items[0].snippet.description");
+      if(songDescription) {
+          return next(null, songDescription)
+      } else {
+        return next(null, 'No description found!')
+      }
+    }
+  });
 }
 
 

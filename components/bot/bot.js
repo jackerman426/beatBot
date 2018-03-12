@@ -73,9 +73,9 @@ Bot.prototype.start = function () {
         })
     });
 
-    http.createServer(messengerBot.middleware()).listen(8000);
-    console.log('BeatBot server running at port 8000')
-}
+    http.createServer(messengerBot.middleware()).listen(process.env.PORT);
+    console.log('BeatBot server running at port ' + process.env.PORT)
+};
 
 // // -----------------------------------------------------------------------------
 // /** Process Bot api event.
@@ -105,6 +105,7 @@ Bot.prototype.resolveMessage = function(message, next) {
         // let text = message.split(' ')[1] || '';
         let action = message.substring(0, message.indexOf(" ")) || message;
         let text = message.substring(message.indexOf(" ")+1) || "";
+        // let text = message.split(' ')[1];
         if(action)
             action = action.toLowerCase();
         self.resolveAction(action, text, function (error, replyText) {
